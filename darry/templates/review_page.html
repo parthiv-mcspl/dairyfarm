@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Page</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #f0f4f7, #d9e2ec);
+            color: #333;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+
+        /* Form Styling */
+        form {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            border: 2px solid #3498db;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #star-rating {
+            border: 1px solid #e1e4e8;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f7fafc;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .star {
+            font-size: 40px;
+            color: lightgray;
+            transition: color 0.3s ease;
+        }
+
+        .star.filled {
+            color: gold;
+        }
+
+        .form-star {
+            cursor: pointer;
+        }
+
+        input, textarea, button {
+            display: block;
+            width: calc(100% - 40px);
+            margin: 10px auto;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Decorative Divider */
+        .divider {
+            max-width: 600px;
+            margin: 40px auto;
+            border: none;
+            border-top: 2px dashed #bbb;
+        }
+
+        /* Posted Review Styling */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            max-width: 700px;
+            margin: 15px auto;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            border: 2px solid #e1e4e8;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-stars {
+            border: 1px solid #e1e4e8;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f7fafc;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .review-stars .star {
+            font-size: 24px;
+            color: lightgray;
+        }
+
+        .review-stars .star.filled {
+            color: gold;
+        }
+
+        .review-details {
+            padding: 10px 0;
+            text-align: left;
+        }
+
+        .review-details strong {
+            font-size: 16px;
+            color: #2c3e50;
+        }
+
+        .review-details p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: #888;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>Submit Your Review</h1>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div id="star-rating">
+            <input type="hidden" name="rating" id="id_rating" value="0">
+            <span class="star form-star" data-value="1">★</span>
+            <span class="star form-star" data-value="2">★</span>
+            <span class="star form-star" data-value="3">★</span>
+            <span class="star form-star" data-value="4">★</span>
+            <span class="star form-star" data-value="5">★</span>
+        </div>
+
+        <input type="text" name="name" placeholder="Your Name" required>
+        <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
+        <button type="submit">Submit</button>
+    </form>
+
+    <hr class="divider">
+
+    <h2>All Reviews</h2>
+    <ul>
+        {% for review in reviews %}
+            <li>
+                <div class="review-stars">
+                    {% for star in review.stars_filled %}
+                        <span class="star filled">★</span>
+                    {% endfor %}
+                    {% for star in review.stars_empty %}
+                        <span class="star">★</span>
+                    {% endfor %}
+                </div>
+                <div class="review-details">
+                    <strong>{{ review.name }}</strong>
+                    <p>{{ review.message }}</p>
+                </div>
+                <div class="review-date">
+                    {{ review.date|date:"M d, Y H:i" }}
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        const formStars = document.querySelectorAll('.form-star');
+        const ratingInput = document.getElementById('id_rating');
+
+        formStars.forEach((star) => {
+            star.addEventListener('click', () => {
+                const rating = star.getAttribute('data-value');
+                ratingInput.value = rating;
+                updateFormStars(rating);
+            });
+
+            star.addEventListener('mouseover', () => {
+                const rating = star.getAttribute('data-value');
+                updateFormStars(rating);
+            });
+
+            star.addEventListener('mouseout', () => {
+                updateFormStars(ratingInput.value);
+            });
+        });
+
+        function updateFormStars(rating) {
+            formStars.forEach((star) => {
+                if (star.getAttribute('data-value') <= rating) {
+                    star.classList.add('filled');
+                } else {
+                    star.classList.remove('filled');
+                }
+            });
+        }
+    </script>
+    
+</body>
+</html>
+
+
+
+
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Page</title>
+    <style>
+        .star {
+            font-size: 36px;
+            color: gray;
+        }
+
+        .star.filled {
+            color: gold;
+        }
+
+        .form-star {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Submit Your Review</h1>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <!-- Custom Star Rating for Form -->
+        <div id="star-rating">
+            <input type="hidden" name="rating" id="id_rating" value="0">
+            <span class="star form-star" data-value="1">★</span>
+            <span class="star form-star" data-value="2">★</span>
+            <span class="star form-star" data-value="3">★</span>
+            <span class="star form-star" data-value="4">★</span>
+            <span class="star form-star" data-value="5">★</span>
+        </div>
+        
+        <!-- Other Form Fields -->
+        {{ form.name.label }} {{ form.name }}
+        {{ form.message.label }} {{ form.message }}
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>All Reviews</h2>
+    <ul>
+        {% for review in reviews %}
+            <li>
+                <strong>{{ review.name }}</strong> ({{ review.date|date:"M d, Y H:i" }}): 
+                <span>
+                    <!-- Display Static Stars for Submitted Reviews -->
+                    {% for star in review.stars_filled %}
+                        <span class="star filled">★</span>
+                    {% endfor %}
+                    {% for star in review.stars_empty %}
+                        <span class="star">★</span>
+                    {% endfor %}
+                </span>
+                <p>{{ review.message }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        // JavaScript for Fillable Stars (Form Only)
+        const formStars = document.querySelectorAll('.form-star');
+        const ratingInput = document.getElementById('id_rating');
+
+        formStars.forEach((star) => {
+            star.addEventListener('click', () => {
+                const rating = star.getAttribute('data-value');
+                ratingInput.value = rating; // Set the rating value
+                updateFormStars(rating);
+            });
+
+            star.addEventListener('mouseover', () => {
+                const rating = star.getAttribute('data-value');
+                updateFormStars(rating); // Preview stars on hover
+            });
+
+            star.addEventListener('mouseout', () => {
+                updateFormStars(ratingInput.value); // Reset stars after hover
+            });
+        });
+
+        function updateFormStars(rating) {
+            formStars.forEach((star) => {
+                if (star.getAttribute('data-value') <= rating) {
+                    star.classList.add('filled'); // Fill stars up to the rating
+                } else {
+                    star.classList.remove('filled'); // Leave remaining stars gray
+                }
+            });
+        }
+    </script>
+</body>
+</html> {% endcomment %}

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color:rgb(5, 148, 103);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .book {
+            position: relative;
+            width: 800px; /* Book width */
+            height: 850px; /* Book height */
+            border: 2px solid #333;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            background-color:rgb(213, 224, 221);
+
+            
+        }
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border-right: 2px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.5s ease-in-out;
+            transform-origin: left center;
+            display: flex;
+            flex-direction: column; /* Stack content vertically */
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color:rgb(164, 186, 179);
+            
+        }
+
+        .page img {
+            width: 80%; /* Take most of the page width */
+            height: 30%; /* Maintain aspect ratio */
+            max-height: 300px; /* Limit maximum image height */
+            margin-bottom: 20px;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+        }
+
+        .text-content {
+            width: 90%; /* Align text with the image width */
+            text-align: justify;
+            overflow: auto; /* Ensures that text adjusts below the image */
+            padding: 0 5% ;
+        }
+
+        .text-content h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #333;
+            border-bottom: 3px solid #58C684;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .text-content p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #555;
+
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 3px;
+            right: 10px;
+            font-size: 14px;
+            color: #-666;
+            font-weight: bold;
+            
+            
+        }
+
+        .page.hidden {
+            transform: rotateY(-180deg);
+            pointer-events: none;
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        .controls button {
+            background-color: #58C684;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .controls button:hover {
+            background-color: #4caf50;
+        }
+
+        {% comment %} @media (max-width: 76px) {
+            .book {
+                width: 100%;
+                height: auto;
+            }
+            .page {
+                padding: 10px;
+            }
+            .text-content {
+                font-size: 14px;
+            }
+        } {% endcomment %}
+        
+    </style>
+    {% comment %} <meta name="viewport" content="width=device-width, initial-scale=1.0"> {% endcomment %}
+
+</head>
+
+<body>
+    <div class="book">
+        <!-- Pages with content -->
+        {% for book in books %}
+        <div class="page {% if forloop.first == False %}hidden{% endif %}">
+            <img src="{{ book.image.url }}" alt="{{ book.title }}">
+            <div class="text-content">
+                <h2>{{ book.title }}</h2>
+                <p>{{ book.content }}</p>
+            </div>
+            <div class="page-number">Page {{ forloop.counter }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="controls">
+        <button onclick="prevPage()">Previous</button>
+        <button onclick="nextPage()">Next</button>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        const pages = document.querySelectorAll('.page');
+
+        function updatePages() {
+            pages.forEach((page, index) => {
+                page.classList.toggle('hidden', index !== currentPage);
+            });
+        }
+
+        function nextPage() {
+            if (currentPage < pages.length - 1) {
+                currentPage++;
+                updatePages();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 0) {
+                currentPage--;
+                updatePages();
+            }
+        }
+
+        // Initialize pages
+        updatePages();
+    </script>
+</body>
+</html>

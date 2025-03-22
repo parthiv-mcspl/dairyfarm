@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details Page</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #ece9e6, #ffffff);
+            color: #333;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .heading {
+            text-align: center;
+            color: #007BFF;
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+
+        .detail {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #007BFF;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .detail:hover {
+            background: #007BFF;
+            color: white;
+        }
+
+        .detail span {
+            font-weight: bold;
+            color: #007BFF;
+        }
+
+        .detail:hover span {
+            color: white;
+        }
+
+        .phone-link {
+            text-decoration: none;
+            color: inherit;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        .phone-link:hover {
+            color: white;
+        }
+
+        .phone-icon {
+            margin-left: 10px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="heading">User Details</h1>
+        <div class="detail">
+            <span>Name 1:</span> kamani dharmik natubhai
+            <a class="phone-link" href="tel:6351528620">
+                6351528620
+                <span class="phone-icon">📞</span>
+            </a>
+        </div>
+        <div class="detail">
+            <span>Name 2:</span> Jane Smith
+            <a class="phone-link" href="tel:67890">
+                67890
+                <span class="phone-icon">📞</span>
+            </a>
+        </div>
+        <div class="detail">
+            <span>Details:</span> Some additional information about the users.
+        </div>
+    </div>
+</body>
+</html>
